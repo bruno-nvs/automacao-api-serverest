@@ -1,0 +1,186 @@
+{
+  "info": {
+    "_postman_id": "614abd66-ad32-408a-bd7a-243b48878295",
+    "name": "ServeRest - Automação de E-commerce",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53908259",
+    "_collection_link": "https://go.postman.co/collection/53908259-614abd66-ad32-408a-bd7a-243b48878295?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Lista de Produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o servidor respondeu com sucesso (Não deu 503 nem 404)\r",
+                  "pm.test(\"O Status Code deve ser 200 (Sucesso)\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Valida se o tempo de resposta foi rápido\r",
+                  "pm.test(\"O tempo de resposta deve ser menor que 2000ms (2 segundos)\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "// Valida se o sistema realmente retornou a lista de produtos\r",
+                  "pm.test(\"O corpo da resposta deve conter a palavra 'produtos'\", function () {\r",
+                  "    pm.expect(pm.response.text()).to.include(\"produtos\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/produtos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastrar produto",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Teclado Mecânico do Bruno V1.0\",\r\n  \"preco\": 350,\r\n  \"descricao\": \"Teclado barulhento para programador de QA\",\r\n  \"quantidade\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/produtos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuário",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Valida se o login deu certo\r",
+                  "pm.test(\"O Status Code deve ser 200 (Login Sucesso)\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Acha o token e salva na variável\r",
+                  "var resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Validar e salvar o Token\", function () {\r",
+                  "    // Garante que o token veio na resposta\r",
+                  "    pm.expect(resposta).to.have.property('authorization');\r",
+                  "    \r",
+                  "    // Salva o token em uma variável da Coleção\r",
+                  "    pm.collectionVariables.set(\"token\", resposta.authorization);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"fulano@qa.com\",\r\n  \"password\": \"teste\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "https://serverest.dev"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
