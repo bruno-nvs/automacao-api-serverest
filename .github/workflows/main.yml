@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - name: Baixar o código do repositório
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Configurar o Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
 
@@ -29,7 +29,7 @@ jobs:
 
     - name: Salvar o Relatório HTML como artefato
       # Isso permite que você baixe o relatório direto do GitHub depois
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: relatorio-de-testes
         path: newman/*.html
