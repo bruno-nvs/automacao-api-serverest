@@ -1,0 +1,35 @@
+name: Execução de Testes de API - Newman
+
+# Define quando o robô vai acordar
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Baixar o código do repositório
+      uses: actions/checkout@v3
+
+    - name: Configurar o Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Instalar o Newman e o Relatório
+      run: npm install -g newman newman-reporter-htmlextra
+
+    - name: Rodar os Testes da API
+      # Aqui usamos o comando que você já conhece!
+      run: newman run serverest.json --insecure -r htmlextra
+
+    - name: Salvar o Relatório HTML como artefato
+      # Isso permite que você baixe o relatório direto do GitHub depois
+      uses: actions/upload-artifact@v3
+      with:
+        name: relatorio-de-testes
+        path: newman/*.html
